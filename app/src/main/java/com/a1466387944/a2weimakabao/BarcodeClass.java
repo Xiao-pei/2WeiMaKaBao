@@ -8,6 +8,7 @@ import java.util.Date;
 public class BarcodeClass {
     private Bitmap barcode_bitbap;
     private String name;
+    private int id;
     private String info;
     private Boolean is_stared;
     private Date created;
@@ -42,7 +43,7 @@ public class BarcodeClass {
         this.expire = expire;
     }
 
-    public Boolean getIsStared() {
+    public Boolean IsStared() {
         return is_stared;
     }
 
@@ -60,5 +61,13 @@ public class BarcodeClass {
 
     public int getExpire() {
         return expire;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

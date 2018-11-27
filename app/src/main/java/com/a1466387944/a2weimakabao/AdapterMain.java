@@ -11,9 +11,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> {
-    ArrayList<String> names = new ArrayList<>();
-    ArrayList<String> infos = new ArrayList<>();
-    ArrayList<Boolean> stard = new ArrayList<>();
+
+    public interface MyClickItemListener {
+        void onClicked(View view, int position);
+    }
+
+    BarcodeClass[] barcodeClasses;
+    private MyClickItemListener itemListener;
+    private MyClickItemListener starButtonListener;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name_textview;
@@ -22,16 +27,11 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         public MyViewHolder(View v) {
             super(v);
         }
+
     }
 
     public AdapterMain(BarcodeClass[] barcodes){
-        for (int i = 0; i < barcodes.length; i++){
-            names.add(barcodes[i].getName());
-            stard.add(barcodes[i].getIsStared());
-            if (barcodes[i].getInfo()!=null)
-                infos.add(barcodes[i].getInfo());
-            else infos.add(" ");
-        }
+        barcodeClasses = barcodes;
     }
 
     @Override
@@ -39,23 +39,48 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
                                                         int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_main,
                 parent,false);
-        MyViewHolder myViewHolder = new MyViewHolder(view);
+        final MyViewHolder myViewHolder = new MyViewHolder(view);
         myViewHolder.info_textview = view.findViewById(R.id.text_info_item);
         myViewHolder.name_textview = view.findViewById(R.id.text_name_item);
         myViewHolder.star_button = view.findViewById(R.id.button_star);
+
         return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-       holder.name_textview.setText(names.get(position));
-       holder.info_textview.setText(infos.get(position));
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        holder.name_textview.setText(barcodeClasses[position].getName());
+        holder.info_textview.setText(barcodeClasses[position].getInfo());
+        if (barcodeClasses[position].IsStared())
+            holder.star_button.setImageResource(R.drawable.ic_star_full);
+        else
+            holder.star_button.setImageResource(R.drawable.ic_star_empty);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemListener.onClicked(view, holder.getLayoutPosition());
+            }
+        });
+
+        holder.star_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                starButtonListener.onClicked(view, holder.getLayoutPosition());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return names.size();
+        return barcodeClasses.length;
+    }
+
+    public void setItemListener(MyClickItemListener itemListener) {
+        this.itemListener = itemListener;
+    }
+
+    public void setStarButtonListener(MyClickItemListener starButtonListener) {
+        this.starButtonListener = starButtonListener;
     }
 }
