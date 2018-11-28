@@ -63,6 +63,13 @@ public class BarcodeClass {
         return expire;
     }
 
+    public boolean isExpired() {
+        Date expire_date = new Date(created.getTime() + expire * 1000);
+        if (expire_date.before(new Date()))
+            return true;
+        else return false;
+    }
+
     public int getId() {
         return id;
     }
