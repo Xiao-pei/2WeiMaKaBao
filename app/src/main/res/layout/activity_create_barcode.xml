@@ -22,30 +22,44 @@
     <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/text"
-                    android:text="@string/hint_barcode_name"/>
 
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:layout_below="@id/text"
-                    android:id="@+id/barcode_image"/>
+                    android:id="@+id/barcode_image"
+                    android:contentDescription="Barcode Image"/>
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/text_content"
                     android:layout_below="@id/barcode_image"
-                    android:text="@string/hint_barcode_name"/>
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_text_name"
+                    android:layout_below="@id/text_content"
+                    android:ems="10"
+                    android:textStyle="bold"
+                    android:inputType="textPersonName"
+                    android:hint="@string/hint_barcode_name"/>
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_text_info"
+                    android:layout_below="@id/edit_text_name"
+                    android:inputType="text"
+                    android:hint="@string/hint_barcode_info"/>
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
@@ -58,5 +72,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:layout_gravity="end|bottom"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

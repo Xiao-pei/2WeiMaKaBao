@@ -2,10 +2,12 @@ package com.a1466387944.a2weimakabao;
 
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.Date;
 
 public class BarcodeClass {
+
     private Bitmap barcode_bitbap;
     private String name;
     private int id;
@@ -13,6 +15,8 @@ public class BarcodeClass {
     private Boolean is_stared;
     private Date created;
     private int expire; //Expire time in secs;
+    private String barcode_content;
+    private String barcode_type;
 
     public BarcodeClass(Bitmap bitmap, String name, @Nullable String info ) {
         barcode_bitbap = bitmap;
@@ -76,5 +80,12 @@ public class BarcodeClass {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static Boolean isBarcodeAProduct(String barcodetype) {
+        if (IntentIntegrator.PRODUCT_CODE_TYPES.contains(barcodetype))
+            return true;
+        else
+            return false;
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.a1466387944.a2weimakabao">
 
     <uses-feature
@@ -33,15 +34,12 @@
                 android:parentActivityName=".MainActivity">
         </activity>
         <activity
-                android:name=".BarcodeScanActivity"
-                android:label="@string/scan"
-                android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="com.google.android.gms.vision.DEPENDENCIES"
-                    android:value="barcode"/>
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.a1466387944.a2weimakabao.MainActivity"/>
+                android:name="com.journeyapps.barcodescanner.CaptureActivity"
+                android:screenOrientation="portrait"
+                android:stateNotNeeded="true"
+                tools:replace="android:screenOrientation"/>
+
+        <activity android:name=".ScanActivity">
         </activity>
     </application>
 

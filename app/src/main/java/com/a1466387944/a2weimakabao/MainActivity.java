@@ -7,11 +7,16 @@ import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.camera.CameraManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterMain);
+
     }
 
     @Override
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scan_barcode:
-                Intent intent = new Intent(this, BarcodeScanActivity.class);
+                Intent intent = new Intent(this, ScanActivity.class);
                 startActivity(intent);
                 return true;
             default:
