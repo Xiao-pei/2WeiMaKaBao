@@ -8,4 +8,5 @@
     <string name="hint_barcode_name">在此输入二维码卡片的名称</string>
     <string name="hint_barcode_info">在此描述二维码卡片的信息</string>
     <string name="hint_long_click">点击图片查看二维码内容</string>
+    <string name="action_share">分享二维码信息</string>
 </resources>

@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class BarcodeClass {
 
-    private Bitmap barcode_bitbap;
     private String name;
     private int id;
     private String info;
@@ -18,21 +17,16 @@ public class BarcodeClass {
     private String barcode_content;
     private String barcode_type;
 
-    public BarcodeClass(Bitmap bitmap, String name, @Nullable String info ) {
-        barcode_bitbap = bitmap;
-        this.name = name;
-        this.info = info;
-        created = new Date();
-        is_stared = false;
-    }
 
-    public BarcodeClass(Bitmap bitmap, String name, @Nullable String info, int expire ) {
-        barcode_bitbap = bitmap;
+    public BarcodeClass(String name, @Nullable String info, String barcode_content, String barcode_type, int expire) {
         this.name = name;
         this.info = info;
         created = new Date();
         this.expire = expire;
         is_stared = false;
+        id = created.hashCode();
+        this.barcode_content = barcode_content;
+        this.barcode_type = barcode_type;
     }
 
     public void setIsStared(Boolean is_stared) {
@@ -59,15 +53,22 @@ public class BarcodeClass {
         return info;
     }
 
-    public Bitmap getBarcode() {
-        return barcode_bitbap;
-    }
-
     public int getExpire() {
         return expire;
     }
 
+    public String getBarcode_content() {
+        return barcode_content;
+    }
+
+    public String getBarcode_type() {
+        return barcode_type;
+    }
+
+
     public boolean isExpired() {
+        if (expire < 0)
+            return false;
         Date expire_date = new Date(created.getTime() + expire * 1000);
         if (expire_date.before(new Date()))
             return true;

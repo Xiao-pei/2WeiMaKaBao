@@ -16,7 +16,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         void onClicked(View view, int position);
     }
 
-    BarcodeClass[] barcodeClasses;
+    ArrayList<BarcodeClass> barcodeClasses;
     private MyClickItemListener itemListener;
     private MyClickItemListener starButtonListener;
 
@@ -30,7 +30,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     }
 
-    public AdapterMain(BarcodeClass[] barcodes){
+    public AdapterMain(ArrayList<BarcodeClass> barcodes) {
         barcodeClasses = barcodes;
     }
 
@@ -49,9 +49,9 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.name_textview.setText(barcodeClasses[position].getName());
-        holder.info_textview.setText(barcodeClasses[position].getInfo());
-        if (barcodeClasses[position].IsStared())
+        holder.name_textview.setText(barcodeClasses.get(position).getName());
+        holder.info_textview.setText(barcodeClasses.get(position).getInfo());
+        if (barcodeClasses.get(position).IsStared())
             holder.star_button.setImageResource(R.drawable.ic_star_full);
         else
             holder.star_button.setImageResource(R.drawable.ic_star_empty);
@@ -73,7 +73,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return barcodeClasses.length;
+        return barcodeClasses.size();
     }
 
     public void setItemListener(MyClickItemListener itemListener) {

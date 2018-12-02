@@ -13,15 +13,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import com.google.android.gms.vision.L;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.camera.CameraManager;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    BarcodeClass[] barcodeClasses;
+    ArrayList<BarcodeClass> barcodeClasses;
+    MainActivityBarcodeManager barcodeManager;
+    AdapterMain adapterMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +35,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        barcodeClasses = new BarcodeClass[2];
-        barcodeClasses[0] = new BarcodeClass(null, "1st", "the 1st");
-        barcodeClasses[1] = new BarcodeClass(null, "2nd", "YEEEES!");
-        barcodeClasses[0].setIsStared(true);
-
-        AdapterMain adapterMain = new AdapterMain(barcodeClasses);
+        barcodeManager = BarcodeFileManager.getBarcodeFileManager();
+        Log.d("barcodeManager", "created!");
+        barcodeClasses = barcodeManager.getBarcodeArraryList(this);
+        adapterMain = new AdapterMain(barcodeClasses);
         setAdapterlistener(adapterMain);
 
         recyclerView = findViewById(R.id.recyclerview_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterMain);
+
 
     }
 
@@ -47,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapterMain.notifyDataSetChanged();
     }
 
     @Override
@@ -65,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
         adapterMain.setStarButtonListener(new AdapterMain.MyClickItemListener() {
             @Override
             public void onClicked(View view, int position) {
-                if (barcodeClasses[position].IsStared()) {
-                    barcodeClasses[position].setIsStared(false);
+                if (barcodeClasses.get(position).IsStared()) {
+                    barcodeClasses.get(position).setIsStared(false);
                 } else {
-                    barcodeClasses[position].setIsStared(true);
+                    barcodeClasses.get(position).setIsStared(true);
                 }
                 adapterMain.notifyItemChanged(position);
                 Toast toast = Toast.makeText(MainActivity.this, "clicked star " + position, Toast.LENGTH_SHORT);
