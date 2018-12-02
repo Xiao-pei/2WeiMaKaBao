@@ -106,11 +106,13 @@ public class CreateBarcodeActivity extends AppCompatActivity {
     }
 
     public void SaveBarcodeNewClass(View view) {
-        file_saver = BarcodeFileManager.getBarcodeFileManager();
+        file_saver = BarcodeFileManager.getBarcodeFileManager(this);
         String name = barcode_name.getText().toString();
         String info = barcode_info.getText().toString();
         BarcodeClass barcodeClass = new BarcodeClass(name, info, barcode_data, barcode_type, -1);
-        file_saver.NotifyDataAdd(barcodeClass, this);
+        file_saver.NotifyDataAdd(barcodeClass);
+        Intent intent_jump_to_main = new Intent(this, MainActivity.class);
+        startActivity(intent_jump_to_main);
     }
 
 

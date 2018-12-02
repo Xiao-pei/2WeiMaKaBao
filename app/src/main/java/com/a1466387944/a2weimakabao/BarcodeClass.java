@@ -1,12 +1,13 @@
 package com.a1466387944.a2weimakabao;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.Date;
 
-public class BarcodeClass {
+public class BarcodeClass implements Comparable<BarcodeClass> {
 
     private String name;
     private int id;
@@ -65,6 +66,9 @@ public class BarcodeClass {
         return barcode_type;
     }
 
+    public Date getCreatedDate() {
+        return created;
+    }
 
     public boolean isExpired() {
         if (expire < 0)
@@ -88,5 +92,20 @@ public class BarcodeClass {
             return true;
         else
             return false;
+    }
+
+    @Override
+    public int compareTo(@NonNull BarcodeClass barcodeClass) {
+        if (is_stared && barcodeClass.IsStared() || (!is_stared && !barcodeClass.IsStared())) {
+            if (created.after(barcodeClass.getCreatedDate()))
+                return -1;
+            else
+                return 1;
+        } else {
+            if (is_stared)
+                return -1;
+            else
+                return 1;
+        }
     }
 }

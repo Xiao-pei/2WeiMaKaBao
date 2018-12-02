@@ -20,6 +20,8 @@ import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.camera.CameraManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,16 +37,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        barcodeManager = BarcodeFileManager.getBarcodeFileManager();
+        barcodeManager = BarcodeFileManager.getBarcodeFileManager(this);
         Log.d("barcodeManager", "created!");
-        barcodeClasses = barcodeManager.getBarcodeArraryList(this);
+        barcodeClasses = barcodeManager.getBarcodeArrayList();
         adapterMain = new AdapterMain(barcodeClasses);
         setAdapterlistener(adapterMain);
 
         recyclerView = findViewById(R.id.recyclerview_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterMain);
-
 
     }
 
@@ -81,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     barcodeClasses.get(position).setIsStared(true);
                 }
-                adapterMain.notifyItemChanged(position);
+                Collections.sort(barcodeClasses);
+                adapterMain.notifyDataSetChanged();
+                barcodeManager.NotifyDataChanged();
                 Toast toast = Toast.makeText(MainActivity.this, "clicked star " + position, Toast.LENGTH_SHORT);
                 toast.show();
 

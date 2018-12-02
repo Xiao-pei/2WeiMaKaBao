@@ -23,29 +23,30 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     Gson gson;
     JSONArray jsonArray = new JSONArray();
     ArrayList<BarcodeClass> barcodeClasses = null;
+    Context context;
 
-    public static BarcodeFileManager getBarcodeFileManager() {
+    public static BarcodeFileManager getBarcodeFileManager(Context context) {
         if (barcodeFileManager == null) {
             Log.d("barcodeManager", "create BarcodeFileManager!!");
-            barcodeFileManager = new BarcodeFileManager();
+            barcodeFileManager = new BarcodeFileManager(context);
         }
         return barcodeFileManager;
     }
 
-    private BarcodeFileManager() {
+    private BarcodeFileManager(Context context) {
         gson = new Gson();
         barcodeClasses = new ArrayList<>();
+        this.context = context;
     }
 
+    /*add barcodeClass to the ArrayList barcodeClasses and the jsonArray,
+     * then save the changes to data/data.json */
     @Override
-    public void NotifyDataAdd(BarcodeClass barcodeClass, Context context) {
+    public void NotifyDataAdd(BarcodeClass barcodeClass) {
         Log.d("barcodeManager", "tojson");
         String json = gson.toJson(barcodeClass);
         try {
-            File dir = context.getDir(JSON_PATH, Context.MODE_PRIVATE);
-            if (!dir.exists())
-                dir.mkdir();
-            File file = new File(dir, JSON_FILENAME);
+            File file = getJsonFile(context);
             Log.d("barcodeManager", "File get!");
             barcodeClasses.add(barcodeClass);
             jsonArray.put(new JSONObject(json));
@@ -63,8 +64,8 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     }
 
     @Override
-    public ArrayList<BarcodeClass> getBarcodeArraryList(Context context) {
-        ReadFile(context);
+    public ArrayList<BarcodeClass> getBarcodeArrayList() {
+        ReadFile();
         barcodeClasses = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -76,10 +77,24 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
         return barcodeClasses;
     }
 
-    private void ReadFile(Context context) {
+    /*Regenerate the jsonArray from the changed ArrayList and save it*/
+    @Override
+    public void NotifyDataChanged() {
+        jsonArray = new JSONArray();
         try {
-            File dir = context.getDir(JSON_PATH, Context.MODE_PRIVATE);
-            File file = new File(dir, JSON_FILENAME);
+            for (int i = 0; i < barcodeClasses.size(); i++) {
+                JSONObject json = new JSONObject(gson.toJson(barcodeClasses.get(i)));
+                jsonArray.put(json);
+            }
+            SaveJsonArrayToFile();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ReadFile() {
+        try {
+            File file = getJsonFile(context);
             if (file.exists()) {
                 Log.d("barcodeManager", "read from file!");
                 FileInputStream inputStream = new FileInputStream(file);
@@ -103,5 +118,25 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void SaveJsonArrayToFile() {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(getJsonFile(context));
+            fileOutputStream.write(jsonArray.toString().getBytes());
+            Log.d("barcodeManager", jsonArray.toString());
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private File getJsonFile(Context context) {
+        File dir = context.getDir(JSON_PATH, Context.MODE_PRIVATE);
+        if (!dir.exists())
+            dir.mkdir();
+        return new File(dir, JSON_FILENAME);
     }
 }
