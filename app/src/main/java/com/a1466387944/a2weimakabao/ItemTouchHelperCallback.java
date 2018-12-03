@@ -1,5 +1,6 @@
 package com.a1466387944.a2weimakabao;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
@@ -27,5 +28,14 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         FileManage.onItemDelete(viewHolder.getAdapterPosition());
         MianListAdapter.onItemDelete(viewHolder.getAdapterPosition());
+    }
+
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            float alpha = (1 - (Math.abs(dX) / recyclerView.getWidth())) * (1 - (Math.abs(dX) / recyclerView.getWidth()));
+            viewHolder.itemView.setAlpha(alpha);
+        }
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 }
