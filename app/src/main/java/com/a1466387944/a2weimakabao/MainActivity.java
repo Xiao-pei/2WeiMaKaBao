@@ -7,6 +7,7 @@ import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BarcodeClass> barcodeClasses;
     MainActivityBarcodeManager barcodeManager;
     AdapterMain adapterMain;
+    ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         barcodeManager = BarcodeFileManager.getBarcodeFileManager(this);
-        Log.d("barcodeManager", "created!");
         barcodeClasses = barcodeManager.getBarcodeArrayList();
         adapterMain = new AdapterMain(barcodeClasses);
         setAdapterlistener(adapterMain);
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterMain);
 
+        ItemTouchHelperCallback callback = new ItemTouchHelperCallback(barcodeManager, adapterMain);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -87,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 barcodeManager.NotifyDataChanged();
                 Toast toast = Toast.makeText(MainActivity.this, "clicked star " + position, Toast.LENGTH_SHORT);
                 toast.show();
-
             }
         });
 

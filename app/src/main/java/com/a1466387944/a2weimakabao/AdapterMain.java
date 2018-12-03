@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> {
+public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> implements ItemTouchAdapter {
 
     public interface MyClickItemListener {
         void onClicked(View view, int position);
@@ -77,6 +77,11 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
     @Override
     public int getItemCount() {
         return barcodeClasses.size();
+    }
+
+    @Override
+    public void onItemDelete(int position) {
+        notifyItemRemoved(position);
     }
 
     public void setItemListener(MyClickItemListener itemListener) {

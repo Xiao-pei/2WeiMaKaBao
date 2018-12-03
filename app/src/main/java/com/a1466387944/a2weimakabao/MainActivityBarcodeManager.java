@@ -5,7 +5,9 @@ import android.content.Context;
 import java.util.ArrayList;
 
 public interface MainActivityBarcodeManager {
-    public ArrayList<BarcodeClass> getBarcodeArrayList();
+    ArrayList<BarcodeClass> getBarcodeArrayList();
 
-    public void NotifyDataChanged();
+    void NotifyDataChanged();
+
+    void onItemDelete(int position);
 }

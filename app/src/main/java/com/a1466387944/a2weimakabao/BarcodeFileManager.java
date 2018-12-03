@@ -1,19 +1,15 @@
 package com.a1466387944.a2weimakabao;
 
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.zxing.BarcodeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+
 
 public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarcodeManager {
     public static String JSON_PATH = "data";
@@ -46,7 +42,7 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
         Log.d("barcodeManager", "tojson");
         String json = gson.toJson(barcodeClass);
         try {
-            File file = getJsonFile(context);
+            File file = getJsonFile();
             Log.d("barcodeManager", "File get!");
             barcodeClasses.add(barcodeClass);
             jsonArray.put(new JSONObject(json));
@@ -94,9 +90,8 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
 
     private void ReadFile() {
         try {
-            File file = getJsonFile(context);
+            File file = getJsonFile();
             if (file.exists()) {
-                Log.d("barcodeManager", "read from file!");
                 FileInputStream inputStream = new FileInputStream(file);
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader streamReader = new BufferedReader(inputStreamReader);
@@ -120,9 +115,16 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
         }
     }
 
+    @Override
+    public void onItemDelete(int position) {
+        barcodeClasses.remove(position);
+        jsonArray.remove(position);
+        SaveJsonArrayToFile();
+    }
+
     private void SaveJsonArrayToFile() {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(getJsonFile(context));
+            FileOutputStream fileOutputStream = new FileOutputStream(getJsonFile());
             fileOutputStream.write(jsonArray.toString().getBytes());
             Log.d("barcodeManager", jsonArray.toString());
             fileOutputStream.close();
@@ -133,7 +135,7 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
         }
     }
 
-    private File getJsonFile(Context context) {
+    private File getJsonFile() {
         File dir = context.getDir(JSON_PATH, Context.MODE_PRIVATE);
         if (!dir.exists())
             dir.mkdir();

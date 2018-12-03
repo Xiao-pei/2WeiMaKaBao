@@ -10,7 +10,6 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,8 +19,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class CreateBarcodeActivity extends AppCompatActivity {
@@ -112,6 +109,7 @@ public class CreateBarcodeActivity extends AppCompatActivity {
         BarcodeClass barcodeClass = new BarcodeClass(name, info, barcode_data, barcode_type, -1);
         file_saver.NotifyDataAdd(barcodeClass);
         Intent intent_jump_to_main = new Intent(this, MainActivity.class);
+        this.finish();
         startActivity(intent_jump_to_main);
     }
 
