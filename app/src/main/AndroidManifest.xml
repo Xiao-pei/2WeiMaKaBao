@@ -12,7 +12,6 @@
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -41,8 +40,12 @@
                 android:screenOrientation="portrait"
                 android:stateNotNeeded="true"
                 tools:replace="android:screenOrientation"/>
-
         <activity android:name=".ScanActivity">
+        </activity>
+        <activity
+                android:name=".BarcodeDetail"
+                android:label="@string/detail"
+                android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,8 +120,15 @@ public class MainActivity extends AppCompatActivity {
         adapterMain.setItemListener(new AdapterMain.MyClickItemListener() {
             @Override
             public void onClicked(View view, int position) {
-                Toast toast = Toast.makeText(MainActivity.this, "clicked " + position, Toast.LENGTH_SHORT);
-                toast.show();
+                ArrayList<BarcodeClass> filted_barcodes = adapterMain.getFilted_barcodeClasses();
+                Intent intent_to_detail = new Intent(view.getContext(), BarcodeDetail.class);
+                BarcodeClass clicked_barcode = filted_barcodes.get(position);
+                intent_to_detail.putExtra(BarcodeDetail.ID, clicked_barcode.getId());
+                intent_to_detail.putExtra(BarcodeDetail.NAME, clicked_barcode.getName());
+                intent_to_detail.putExtra(BarcodeDetail.INFO, clicked_barcode.getInfo());
+                intent_to_detail.putExtra(BarcodeDetail.TYPE, clicked_barcode.getBarcode_type());
+                intent_to_detail.putExtra(BarcodeDetail.CONTENT, clicked_barcode.getBarcode_content());
+                startActivity(intent_to_detail);
             }
         });
     }

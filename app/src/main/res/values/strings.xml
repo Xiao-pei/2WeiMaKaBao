@@ -2,6 +2,8 @@
     <string name="app_name">二维码卡包</string>
     <string name="scan">扫描二维码</string>
     <string name="create">新建二维码卡片</string>
+    <string name="detail">二维码卡片详情</string>
+    <string name="delete">删除二维码卡片</string>
 
     <string name="barcode_content">二维码内容</string>
     <string name="barcode_name">名称</string>

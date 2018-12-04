@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarcodeManager {
+public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarcodeManager, DetailBarcodeFileManager {
     public static String JSON_PATH = "data";
     public static String JSON_FILENAME = "data.json";
     private static BarcodeFileManager barcodeFileManager;
@@ -124,6 +124,17 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
             }
         }
         SaveJsonArrayToFile();
+    }
+
+    @Override
+    public void BarcodeDataChanged(int id, String name, String info) {
+        for (int i = 0; i < barcodeClasses.size(); i++)
+            if (barcodeClasses.get(i).getId() == id) {
+                barcodeClasses.get(i).setInfo(info);
+                barcodeClasses.get(i).setName(name);
+                NotifyDataChanged();
+                break;
+            }
     }
 
     private void SaveJsonArrayToFile() {

@@ -1,15 +1,18 @@
 package com.a1466387944.a2weimakabao;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public class BarcodeClass implements Comparable<BarcodeClass> {
 
     private String name;
-    private int id;
+    final private int id;
     private String info;
     private Boolean is_stared;
     private Date created;
@@ -49,6 +52,10 @@ public class BarcodeClass implements Comparable<BarcodeClass> {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getInfo() {
         return info;
     }
@@ -80,10 +87,6 @@ public class BarcodeClass implements Comparable<BarcodeClass> {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public static Boolean isBarcodeAProduct(String barcodetype) {

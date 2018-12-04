@@ -114,7 +114,8 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     public void reSyncList() {
         filted_barcodeClasses.clear();
-        filted_barcodeClasses.addAll(barcodeClasses);
+        Log.d("barcodeManager", "clear!");
+        filted_barcodeClasses = new ArrayList<>(barcodeClasses);
         notifyDataSetChanged();
     }
 
