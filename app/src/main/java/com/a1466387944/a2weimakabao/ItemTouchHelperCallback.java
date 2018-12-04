@@ -26,8 +26,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        FileManage.onItemDelete(viewHolder.getAdapterPosition());
-        MianListAdapter.onItemDelete(viewHolder.getAdapterPosition());
+        int id = MianListAdapter.onItemDelete(viewHolder.getAdapterPosition());
+        FileManage.onItemDelete(id);
     }
 
     @Override

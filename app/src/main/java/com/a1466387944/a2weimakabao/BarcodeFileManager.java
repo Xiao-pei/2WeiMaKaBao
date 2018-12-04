@@ -9,12 +9,12 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarcodeManager {
     public static String JSON_PATH = "data";
     public static String JSON_FILENAME = "data.json";
-    public static String BITMAP_PATH = "bitmaps";
     private static BarcodeFileManager barcodeFileManager;
     Gson gson;
     JSONArray jsonArray = new JSONArray();
@@ -23,7 +23,6 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
 
     public static BarcodeFileManager getBarcodeFileManager(Context context) {
         if (barcodeFileManager == null) {
-            Log.d("barcodeManager", "create BarcodeFileManager!!");
             barcodeFileManager = new BarcodeFileManager(context);
         }
         return barcodeFileManager;
@@ -39,12 +38,12 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
      * then save the changes to data/data.json */
     @Override
     public void NotifyDataAdd(BarcodeClass barcodeClass) {
-        Log.d("barcodeManager", "tojson");
         String json = gson.toJson(barcodeClass);
         try {
             File file = getJsonFile();
             Log.d("barcodeManager", "File get!");
             barcodeClasses.add(barcodeClass);
+            Collections.sort(barcodeClasses);
             jsonArray.put(new JSONObject(json));
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(jsonArray.toString().getBytes());
@@ -116,9 +115,14 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     }
 
     @Override
-    public void onItemDelete(int position) {
-        barcodeClasses.remove(position);
-        jsonArray.remove(position);
+    public void onItemDelete(int id) {
+        for (int i = 0; i < barcodeClasses.size(); i++) {
+            if (barcodeClasses.get(i).getId() == id) {
+                barcodeClasses.remove(i);
+                jsonArray.remove(i);
+                break;
+            }
+        }
         SaveJsonArrayToFile();
     }
 

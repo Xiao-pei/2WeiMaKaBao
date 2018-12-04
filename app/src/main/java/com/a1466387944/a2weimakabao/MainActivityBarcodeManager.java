@@ -9,5 +9,5 @@ public interface MainActivityBarcodeManager {
 
     void NotifyDataChanged();
 
-    void onItemDelete(int position);
+    void onItemDelete(int id);
 }
