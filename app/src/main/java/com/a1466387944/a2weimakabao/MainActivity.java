@@ -3,8 +3,8 @@ package com.a1466387944.a2weimakabao;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -94,13 +94,22 @@ public class MainActivity extends AppCompatActivity {
         adapterMain.setStarButtonListener(new AdapterMain.MyClickItemListener() {
             @Override
             public void onClicked(View view, int position) {
-                if (barcodeClasses.get(position).IsStared()) {
-                    barcodeClasses.get(position).setIsStared(false);
-                } else {
-                    barcodeClasses.get(position).setIsStared(true);
+                ArrayList<BarcodeClass> filted_barcodes = adapterMain.getFilted_barcodeClasses();
+                int id = filted_barcodes.get(position).getId();
+                int changed_position = position;
+                if (filted_barcodes.get(position).IsStared())
+                    filted_barcodes.get(position).setIsStared(false);
+                else
+                    filted_barcodes.get(position).setIsStared(true);
+
+                Collections.sort(filted_barcodes);
+                for (int i = 0; i < filted_barcodes.size(); i++) {
+                    if (filted_barcodes.get(i).getId() == id)
+                        changed_position = i;
                 }
+                adapterMain.notifyItemChanged(position);
+                adapterMain.notifyItemMoved(position, changed_position);
                 Collections.sort(barcodeClasses);
-                adapterMain.reSyncList();
                 barcodeManager.NotifyDataChanged();
                 Toast toast = Toast.makeText(MainActivity.this, "clicked star " + position, Toast.LENGTH_SHORT);
                 toast.show();

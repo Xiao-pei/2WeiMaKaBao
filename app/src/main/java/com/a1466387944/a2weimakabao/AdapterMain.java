@@ -1,7 +1,5 @@
 package com.a1466387944.a2weimakabao;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,11 +23,13 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
     ArrayList<BarcodeClass> filted_barcodeClasses;
     private MyClickItemListener itemListener;
     private MyClickItemListener starButtonListener;
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name_textview;
         public TextView info_textview;
         public ImageButton star_button;
         public CardView card_view;
+
         public MyViewHolder(View v) {
             super(v);
         }
@@ -76,9 +76,9 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     @Override
     public AdapterMain.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+                                                       int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_main,
-                parent,false);
+                parent, false);
         final MyViewHolder myViewHolder = new MyViewHolder(view);
         myViewHolder.info_textview = view.findViewById(R.id.text_info_item);
         myViewHolder.name_textview = view.findViewById(R.id.text_name_item);
@@ -144,5 +144,9 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     public void setStarButtonListener(MyClickItemListener starButtonListener) {
         this.starButtonListener = starButtonListener;
+    }
+
+    public ArrayList<BarcodeClass> getFilted_barcodeClasses() {
+        return filted_barcodeClasses;
     }
 }

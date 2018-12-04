@@ -1,8 +1,8 @@
 package com.a1466387944.a2weimakabao;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;

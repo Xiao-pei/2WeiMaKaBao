@@ -1,6 +1,5 @@
 package com.a1466387944.a2weimakabao;
 
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.zxing.integration.android.IntentIntegrator;
