@@ -20,15 +20,15 @@ public class CreateBarcodeActivity extends AppCompatActivity {
     public static String FORMAT = "format";
     public static String DATA = "data";
 
-    String barcode_data;
-    String barcode_type;
-    Bitmap bitmap;
-    ImageView imageView;
-    TextView barcode_content;
-    EditText barcode_name;
-    EditText barcode_info;
-    NewBarcodeFileSaver file_saver;
-    ShareActionProvider shareActionProvider;
+    private String barcode_data;
+    private String barcode_type;
+    private Bitmap bitmap;
+    private ImageView imageView;
+    private TextView barcode_content;
+    private EditText barcode_name;
+    private EditText barcode_info;
+    private NewBarcodeFileSaver file_saver;
+    private ShareActionProvider shareActionProvider;
 
 
     @Override

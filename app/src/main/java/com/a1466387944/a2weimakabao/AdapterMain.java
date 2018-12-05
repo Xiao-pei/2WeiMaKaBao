@@ -1,5 +1,7 @@
 package com.a1466387944.a2weimakabao;
 
+import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,10 +21,12 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         void onClicked(View view, int position);
     }
 
-    ArrayList<BarcodeClass> barcodeClasses;
-    ArrayList<BarcodeClass> filted_barcodeClasses;
+    private ArrayList<BarcodeClass> barcodeClasses;
+    private ArrayList<BarcodeClass> filted_barcodeClasses;
     private MyClickItemListener itemListener;
     private MyClickItemListener starButtonListener;
+    private View.OnClickListener snackbarListener;
+    View coordinator_layout;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name_textview;
@@ -69,9 +73,10 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         }
     };
 
-    public AdapterMain(ArrayList<BarcodeClass> barcodes) {
+    public AdapterMain(ArrayList<BarcodeClass> barcodes, View view) {
         barcodeClasses = barcodes;
         filted_barcodeClasses = new ArrayList<>(barcodes);
+        coordinator_layout = view;
     }
 
     @Override
@@ -133,9 +138,11 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
     public int onItemDelete(int position) {
         int id = filted_barcodeClasses.get(position).getId();
         notifyItemRemoved(position);
-        Log.d("barcodeManager", "position" + position);
         filted_barcodeClasses.remove(position);
-        Log.d("barcodeManager", "position removed");
+        Snackbar snackbar = Snackbar.make(coordinator_layout,
+                R.string.deleted, Snackbar.LENGTH_SHORT);
+        snackbar.setAction(coordinator_layout.getResources().getString(R.string.undo), snackbarListener);
+        snackbar.show();
         return id;
     }
 
@@ -145,6 +152,10 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
 
     public void setStarButtonListener(MyClickItemListener starButtonListener) {
         this.starButtonListener = starButtonListener;
+    }
+
+    public void setSnackbarListener(View.OnClickListener snackbarListener) {
+        this.snackbarListener = snackbarListener;
     }
 
     public ArrayList<BarcodeClass> getFilted_barcodeClasses() {

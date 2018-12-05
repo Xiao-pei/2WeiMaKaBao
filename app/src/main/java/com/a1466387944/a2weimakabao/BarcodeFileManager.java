@@ -15,11 +15,12 @@ import java.util.Collections;
 public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarcodeManager, DetailBarcodeFileManager {
     public static String JSON_PATH = "data";
     public static String JSON_FILENAME = "data.json";
+    public static String CACHE_FILENAME = "cache.json";
     private static BarcodeFileManager barcodeFileManager;
-    Gson gson;
-    JSONArray jsonArray = new JSONArray();
-    ArrayList<BarcodeClass> barcodeClasses = null;
-    Context context;
+    private Gson gson;
+    private JSONArray jsonArray = new JSONArray();
+    private ArrayList<BarcodeClass> barcodeClasses = null;
+    private Context context;
 
     public static BarcodeFileManager getBarcodeFileManager(Context context) {
         if (barcodeFileManager == null) {
@@ -39,23 +40,9 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     @Override
     public void NotifyDataAdd(BarcodeClass barcodeClass) {
         String json = gson.toJson(barcodeClass);
-        try {
-            File file = getJsonFile();
-            Log.d("barcodeManager", "File get!");
-            barcodeClasses.add(barcodeClass);
-            Collections.sort(barcodeClasses);
-            jsonArray.put(new JSONObject(json));
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(jsonArray.toString().getBytes());
-            Log.d("barcodeManager", jsonArray.toString());
-            fileOutputStream.close();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        barcodeClasses.add(barcodeClass);
+        Collections.sort(barcodeClasses);
+        NotifyDataChanged();
     }
 
     @Override
@@ -82,6 +69,26 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
                 jsonArray.put(json);
             }
             SaveJsonArrayToFile();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void UndoDelete() {
+        try {
+            File file = new File(context.getCacheDir(), CACHE_FILENAME);
+            FileInputStream inputStream = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader streamReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                stringBuilder.append(inputStr);
+            JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+            NotifyDataAdd(gson.fromJson(jsonObject.toString(), BarcodeClass.class));
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -118,6 +125,7 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     public void onItemDelete(int id) {
         for (int i = 0; i < barcodeClasses.size(); i++) {
             if (barcodeClasses.get(i).getId() == id) {
+                SaveBarcodeToCache(barcodeClasses.get(i));
                 barcodeClasses.remove(i);
                 jsonArray.remove(i);
                 break;
@@ -145,6 +153,17 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void SaveBarcodeToCache(BarcodeClass barcode) {
+        try {
+            File file = new File(context.getCacheDir(), CACHE_FILENAME);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(gson.toJson(barcode).getBytes());
+            fileOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

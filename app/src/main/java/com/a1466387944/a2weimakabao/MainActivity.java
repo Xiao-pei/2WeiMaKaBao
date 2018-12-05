@@ -14,19 +14,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    ArrayList<BarcodeClass> barcodeClasses;
-    MainActivityBarcodeManager barcodeManager;
-    AdapterMain adapterMain;
-    ItemTouchHelper itemTouchHelper;
-    SearchView searchView;
+    private RecyclerView recyclerView;
+    private ArrayList<BarcodeClass> barcodeClasses;
+    private MainActivityBarcodeManager barcodeManager;
+    private AdapterMain adapterMain;
+    private ItemTouchHelper itemTouchHelper;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         barcodeManager = BarcodeFileManager.getBarcodeFileManager(this);
         barcodeClasses = barcodeManager.getBarcodeArrayList();
-        adapterMain = new AdapterMain(barcodeClasses);
+        adapterMain = new AdapterMain(barcodeClasses, findViewById(R.id.coordinator_layout));
         setAdapterlistener(adapterMain);
 
         recyclerView = findViewById(R.id.recyclerview_main);
@@ -102,18 +101,22 @@ public class MainActivity extends AppCompatActivity {
                     filted_barcodes.get(position).setIsStared(false);
                 else
                     filted_barcodes.get(position).setIsStared(true);
+                boolean result = filted_barcodes.get(position).IsStared();
 
                 Collections.sort(filted_barcodes);
                 for (int i = 0; i < filted_barcodes.size(); i++) {
                     if (filted_barcodes.get(i).getId() == id)
                         changed_position = i;
                 }
+                for (int i = 0; i < barcodeClasses.size(); i++) {
+                    if (barcodeClasses.get(i).getId() == id)
+                        barcodeClasses.get(i).setIsStared(result);
+                }
                 adapterMain.notifyItemChanged(position);
                 adapterMain.notifyItemMoved(position, changed_position);
                 Collections.sort(barcodeClasses);
                 barcodeManager.NotifyDataChanged();
-                Toast toast = Toast.makeText(MainActivity.this, "clicked star " + position, Toast.LENGTH_SHORT);
-                toast.show();
+                Log.d("barcodeManager", barcodeClasses.get(changed_position).getName());
             }
         });
 
@@ -129,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
                 intent_to_detail.putExtra(BarcodeDetail.TYPE, clicked_barcode.getBarcode_type());
                 intent_to_detail.putExtra(BarcodeDetail.CONTENT, clicked_barcode.getBarcode_content());
                 startActivity(intent_to_detail);
+            }
+        });
+
+        adapterMain.setSnackbarListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("barcodeManager", "undo clicked");
+                barcodeManager.UndoDelete();
+                adapterMain.reSyncList();
             }
         });
     }

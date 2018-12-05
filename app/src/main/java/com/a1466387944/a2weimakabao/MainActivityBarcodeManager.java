@@ -8,4 +8,6 @@ public interface MainActivityBarcodeManager {
     void NotifyDataChanged();
 
     void onItemDelete(int id);
+
+    void UndoDelete();
 }
