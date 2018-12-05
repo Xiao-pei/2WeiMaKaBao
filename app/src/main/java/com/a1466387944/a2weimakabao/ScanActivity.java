@@ -23,7 +23,6 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("barcodeManager", "准备启动扫描");
         new IntentIntegrator(this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
     }
 
@@ -32,13 +31,10 @@ public class ScanActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Log.d("barcodeManager", "Cancelled scan");
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
                 Intent to_main = new Intent(this, MainActivity.class);
                 this.finish();
                 startActivity(to_main);
             } else {
-                Log.d("barcodeManager", "Scanned: " + result.getContents() + result.getFormatName());
                 Intent to_create = new Intent(this, CreateBarcodeActivity.class);
                 to_create.putExtra(CreateBarcodeActivity.DATA, result.getContents());
                 to_create.putExtra(CreateBarcodeActivity.FORMAT, result.getFormatName());

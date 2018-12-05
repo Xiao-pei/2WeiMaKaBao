@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 adapterMain.notifyItemMoved(position, changed_position);
                 Collections.sort(barcodeClasses);
                 barcodeManager.NotifyDataChanged();
-                Log.d("barcodeManager", barcodeClasses.get(changed_position).getName());
             }
         });
 
@@ -138,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
         adapterMain.setSnackbarListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("barcodeManager", "undo clicked");
                 barcodeManager.UndoDelete();
                 adapterMain.reSyncList();
             }
