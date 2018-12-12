@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class CreateBarcodeActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class CreateBarcodeActivity extends AppCompatActivity {
 
     private String barcode_data;
     private String barcode_type;
+    private int expire_time;
     private Bitmap bitmap;
     private ImageView imageView;
     private TextView barcode_content;
@@ -29,6 +31,7 @@ public class CreateBarcodeActivity extends AppCompatActivity {
     private EditText barcode_info;
     private NewBarcodeFileSaver file_saver;
     private ShareActionProvider shareActionProvider;
+    private RadioGroup radioGroup;
 
 
     @Override
@@ -43,6 +46,9 @@ public class CreateBarcodeActivity extends AppCompatActivity {
         barcode_content = findViewById(R.id.text_content);
         barcode_name = findViewById(R.id.edit_text_name);
         barcode_info = findViewById(R.id.edit_text_info);
+        radioGroup = findViewById(R.id.radio_group);
+        radioGroup.check(R.id.radio_one_day);
+        expire_time = BarcodeClass.ONE_DAY;
         Intent intent = getIntent();
         barcode_data = intent.getStringExtra(DATA);
         barcode_type = intent.getStringExtra(FORMAT);
@@ -79,15 +85,33 @@ public class CreateBarcodeActivity extends AppCompatActivity {
     }
 
     public void SaveBarcodeNewClass(View view) {
+        RadioButtonClicked();
         file_saver = BarcodeFileManager.getBarcodeFileManager(this);
         String name = barcode_name.getText().toString();
         String info = barcode_info.getText().toString();
-        BarcodeClass barcodeClass = new BarcodeClass(name, info, barcode_data, barcode_type, -1);
+        BarcodeClass barcodeClass = new BarcodeClass(name, info, barcode_data, barcode_type, expire_time);
         file_saver.NotifyDataAdd(barcodeClass);
         Intent intent_jump_to_main = new Intent(this, MainActivity.class);
         this.finish();
         startActivity(intent_jump_to_main);
     }
 
-
+    private void RadioButtonClicked() {
+        int id = radioGroup.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.radio_cannot_expire:
+                Log.d("yeeee", "radio_cannot_expire");
+                expire_time = -1;
+                break;
+            case R.id.radio_one_day:
+                expire_time = BarcodeClass.ONE_DAY;
+                break;
+            case R.id.radio_two_days:
+                expire_time = BarcodeClass.ONE_DAY * 2;
+                break;
+            case R.id.radio_one_week:
+                expire_time = BarcodeClass.ONE_DAY * 7;
+                break;
+        }
+    }
 }

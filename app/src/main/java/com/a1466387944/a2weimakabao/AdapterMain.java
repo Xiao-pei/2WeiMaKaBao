@@ -1,6 +1,5 @@
 package com.a1466387944.a2weimakabao;
 
-import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -8,12 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> implements ItemTouchAdapter, Filterable {
 
@@ -32,6 +29,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         public TextView name_textview;
         public TextView info_textview;
         public ImageButton star_button;
+        public ImageView image;
         public CardView card_view;
 
         public MyViewHolder(View v) {
@@ -39,6 +37,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         }
 
     }
+
 
     private Filter MyFilter = new Filter() {
         @Override
@@ -56,7 +55,8 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
                 for (BarcodeClass item : barcodeClasses) {
                     if (item.getName().toLowerCase().contains(filterPattern)
                             || item.getInfo().contains(filterPattern)) {
-                        filted_barcodeClasses.add(item);
+                        if (!item.isExpired())
+                            filted_barcodeClasses.add(item);
                     }
                 }
             }
@@ -70,6 +70,7 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             notifyDataSetChanged();
+            //notifyItemRangeChanged(0,filterResults.count);
         }
     };
 
@@ -82,14 +83,15 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
     @Override
     public AdapterMain.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
+        Log.d("barcodeManager", "pos: " + viewType);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_main,
                 parent, false);
         final MyViewHolder myViewHolder = new MyViewHolder(view);
         myViewHolder.info_textview = view.findViewById(R.id.text_info_item);
         myViewHolder.name_textview = view.findViewById(R.id.text_name_item);
+        myViewHolder.image = view.findViewById(R.id.image_view_expired);
         myViewHolder.star_button = view.findViewById(R.id.button_star);
         myViewHolder.card_view = view.findViewById(R.id.card_view);
-
         return myViewHolder;
     }
 
@@ -97,10 +99,23 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.name_textview.setText(filted_barcodeClasses.get(position).getName());
         holder.info_textview.setText(filted_barcodeClasses.get(position).getInfo());
-        if (filted_barcodeClasses.get(position).IsStared())
-            holder.star_button.setImageResource(R.drawable.ic_star_full);
-        else
-            holder.star_button.setImageResource(R.drawable.ic_star_empty);
+        if (!filted_barcodeClasses.get(position).isExpired()) {
+            holder.star_button.setVisibility(View.VISIBLE);
+            holder.image.setVisibility(View.INVISIBLE);
+            if (filted_barcodeClasses.get(position).IsStared())
+                holder.star_button.setImageResource(R.drawable.ic_star_full);
+            else
+                holder.star_button.setImageResource(R.drawable.ic_star_empty);
+            holder.star_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    starButtonListener.onClicked(view, holder.getLayoutPosition());
+                }
+            });
+        } else {
+            holder.star_button.setVisibility(View.INVISIBLE);
+            holder.image.setVisibility(View.VISIBLE);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,18 +123,16 @@ public class AdapterMain extends RecyclerView.Adapter<AdapterMain.MyViewHolder> 
                 itemListener.onClicked(view, holder.getLayoutPosition());
             }
         });
+    }
 
-        holder.star_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                starButtonListener.onClicked(view, holder.getLayoutPosition());
-            }
-        });
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public void reSyncList() {
         filted_barcodeClasses.clear();
-        Log.d("barcodeManager", "clear!");
+        Collections.sort(barcodeClasses);
         filted_barcodeClasses = new ArrayList<>(barcodeClasses);
         notifyDataSetChanged();
     }

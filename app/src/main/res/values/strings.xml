@@ -13,4 +13,9 @@
     <string name="hint_barcode_info">在此描述二维码卡片的信息</string>
     <string name="hint_long_click">点击图片查看二维码内容</string>
     <string name="action_share">分享二维码信息</string>
+    <string name="cannot_expire">不过期</string>
+    <string name="expire_time">过期时间</string>
+    <string name="one_day">一天</string>
+    <string name="two_days">两天</string>
+    <string name="one_week">一周</string>
 </resources>

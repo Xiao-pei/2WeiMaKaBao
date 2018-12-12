@@ -41,7 +41,6 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     public void NotifyDataAdd(BarcodeClass barcodeClass) {
         String json = gson.toJson(barcodeClass);
         barcodeClasses.add(barcodeClass);
-        Collections.sort(barcodeClasses);
         NotifyDataChanged();
     }
 
@@ -62,6 +61,7 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     /*Regenerate the jsonArray from the changed ArrayList and save it*/
     @Override
     public void NotifyDataChanged() {
+        Collections.sort(barcodeClasses);
         jsonArray = new JSONArray();
         try {
             for (int i = 0; i < barcodeClasses.size(); i++) {
@@ -135,11 +135,12 @@ public class BarcodeFileManager implements NewBarcodeFileSaver, MainActivityBarc
     }
 
     @Override
-    public void BarcodeDataChanged(int id, String name, String info) {
+    public void BarcodeDataChanged(int id, String name, String info, int expire) {
         for (int i = 0; i < barcodeClasses.size(); i++)
             if (barcodeClasses.get(i).getId() == id) {
                 barcodeClasses.get(i).setInfo(info);
                 barcodeClasses.get(i).setName(name);
+                barcodeClasses.get(i).setExpire(expire);
                 NotifyDataChanged();
                 break;
             }

@@ -42,11 +42,58 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"/>
 
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_expire_detail_page"
+                    android:text="@string/expire_time"
+                    android:layout_below="@id/text_content_detail_page"
+                    android:layout_alignBottom="@id/radio_group_detail_page"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:textSize="18sp"
+                    android:layout_alignParentLeft="true"
+                    />
+
+            <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_content_detail_page"
+                    android:layout_toRightOf="@id/text_expire_detail_page"
+                    android:orientation="horizontal"
+                    android:id="@+id/radio_group_detail_page">
+
+                <RadioButton
+                        android:id="@+id/radio_cannot_expire_detail_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cannot_expire"/>
+
+                <RadioButton
+                        android:id="@+id/radio_one_day_detail_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/one_day"/>
+
+                <RadioButton
+                        android:id="@+id/radio_two_days_detail_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/two_days"/>
+
+                <RadioButton
+                        android:id="@+id/radio_one_week_detail_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/one_week"/>
+            </RadioGroup>
+
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/edit_text_name_detail_page"
-                    android:layout_below="@id/text_content_detail_page"
+                    android:layout_below="@id/radio_group_detail_page"
                     android:ems="10"
                     android:textStyle="bold"
                     android:inputType="textPersonName"/>

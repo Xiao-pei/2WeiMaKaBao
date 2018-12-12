@@ -1,22 +1,22 @@
 package com.a1466387944.a2weimakabao;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 
-import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class BarcodeClass implements Comparable<BarcodeClass> {
 
+    public static int ONE_DAY = 24 * 60;
     private String name;
     final private int id;
     private String info;
     private Boolean is_stared;
     private Date created;
-    private int expire; //Expire time in secs;
+    private int expire; //Expire time in min;
     private String barcode_content;
     private String barcode_type;
 
@@ -79,10 +79,14 @@ public class BarcodeClass implements Comparable<BarcodeClass> {
     public boolean isExpired() {
         if (expire < 0)
             return false;
-        Date expire_date = new Date(created.getTime() + expire * 1000);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(created);
+        calendar.add(Calendar.MINUTE, expire);
+        Date expire_date = calendar.getTime();
         if (expire_date.before(new Date()))
             return true;
-        else return false;
+        else
+            return false;
     }
 
     public int getId() {
@@ -90,7 +94,8 @@ public class BarcodeClass implements Comparable<BarcodeClass> {
     }
 
     public static Boolean isBarcodeAProduct(String barcodetype) {
-        if (IntentIntegrator.PRODUCT_CODE_TYPES.contains(barcodetype))
+        if (IntentIntegrator.PRODUCT_CODE_TYPES.contains(barcodetype)
+                || barcodetype == BarcodeFormat.CODE_39.toString())
             return true;
         else
             return false;
@@ -98,16 +103,24 @@ public class BarcodeClass implements Comparable<BarcodeClass> {
 
     @Override
     public int compareTo(@NonNull BarcodeClass barcodeClass) {
-        if (is_stared && barcodeClass.IsStared() || (!is_stared && !barcodeClass.IsStared())) {
-            if (created.after(barcodeClass.getCreatedDate()))
-                return -1;
-            else
-                return 1;
+        if (isExpired() && barcodeClass.isExpired() || (!isExpired() && !barcodeClass.isExpired())) {
+            if (is_stared && barcodeClass.IsStared() || (!is_stared && !barcodeClass.IsStared())) {
+                if (created.after(barcodeClass.getCreatedDate()))
+                    return -1;
+                else
+                    return 1;
+            } else {
+                if (is_stared)
+                    return -1;
+                else
+                    return 1;
+            }
         } else {
-            if (is_stared)
-                return -1;
-            else
+            if (isExpired())
                 return 1;
+            else
+                return -1;
         }
+
     }
 }

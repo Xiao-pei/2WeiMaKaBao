@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         barcodeClasses = barcodeManager.getBarcodeArrayList();
         adapterMain = new AdapterMain(barcodeClasses, findViewById(R.id.coordinator_layout));
         setAdapterlistener(adapterMain);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         recyclerView = findViewById(R.id.recyclerview_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -112,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
                     if (barcodeClasses.get(i).getId() == id)
                         barcodeClasses.get(i).setIsStared(result);
                 }
+                Log.d("yeeee", "star" + position + filted_barcodes.get(changed_position).getName());
                 adapterMain.notifyItemChanged(position);
                 adapterMain.notifyItemMoved(position, changed_position);
-                Collections.sort(barcodeClasses);
                 barcodeManager.NotifyDataChanged();
             }
         });
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 intent_to_detail.putExtra(BarcodeDetail.INFO, clicked_barcode.getInfo());
                 intent_to_detail.putExtra(BarcodeDetail.TYPE, clicked_barcode.getBarcode_type());
                 intent_to_detail.putExtra(BarcodeDetail.CONTENT, clicked_barcode.getBarcode_content());
+                intent_to_detail.putExtra(BarcodeDetail.EXPIRE, clicked_barcode.getExpire());
                 startActivity(intent_to_detail);
             }
         });
